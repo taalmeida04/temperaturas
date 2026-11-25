@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima - São Paulo</title>
+</head>
+<body>
+    <h1>Consulta do clima</h1>
+    <p>Os dados serão exibidos no console do navegador.</p>
+
+    <script>
+      const apiKey = "e22f00f4fd22bef8fd9fb92b5ba455b8";
+const cidades = ["São Paulo", "Rio de Janeiro", "Curitiba"];
+async function analisarClimaCidades() {
+    try {
+        const requisicoes = cidades.map(cidade =>
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cidade)}&appid=${apiKey}&units=metric&lang=pt_br`)
+                .then(resposta => {
+                    if (!resposta.ok) {
+                        throw new Error(`Erro na requisição: ${resposta.status}`);
+                    }
+                return resposta.json();
+                })
+        );
+        const dadosCidades = await Promise.all(requisicoes);
+        // 1 -  apenas as temperaturas das cidades
+        const temperaturas = dadosCidades.map(cidade => cidade.main.temp);
+        console.log("1 - Apenas as temperaturas:");
+        console.log(temperaturas);
+        // 2 -  apenas as cidades e as temperaturas
+        const cidadesTemperaturas = dadosCidades.map(cidade => ({
+            cidade: cidade.name,
+            temperatura: cidade.main.temp
+        }));
+        console.log("2 - Cidades e temperaturas:");
+        console.log(cidadesTemperaturas);
+        // 3 - média das temperaturas das cidades
+        const soma = temperaturas.reduce((total, temperatura) => total + temperatura, 0);
+        const media = soma / temperaturas.length;
+        console.log("3 - Média das temperaturas:");
+        console.log(media.toFixed(2) + "°C");
+        // 4 -temperaturas acima de 26°C
+        const temperaturasAltas = dadosCidades.filter(cidade => cidade.main.temp > 26);
+        console.log("4 - Temperaturas acima de 26°C:");
+        console.log(temperaturasAltas);
+    } catch (erro) {
+        console.error("Erro ao buscar os dados da API:", erro);
+
+    }
+}
+analisarClimaCidades();
+    </script>
+</body>
+</html>
