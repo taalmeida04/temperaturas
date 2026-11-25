@@ -24,23 +24,23 @@ async function analisarClimaCidades() {
                 })
         );
         const dadosCidades = await Promise.all(requisicoes);
-        // 1 -  apenas as temperaturas das cidades
+        // as temperaturas das cidades
         const temperaturas = dadosCidades.map(cidade => cidade.main.temp);
         console.log("1 - Apenas as temperaturas:");
         console.log(temperaturas);
-        // 2 -  apenas as cidades e as temperaturas
+        //  as cidades e as temperaturas
         const cidadesTemperaturas = dadosCidades.map(cidade => ({
             cidade: cidade.name,
             temperatura: cidade.main.temp
         }));
         console.log("2 - Cidades e temperaturas:");
         console.log(cidadesTemperaturas);
-        // 3 - média das temperaturas das cidades
+        //  média das temperaturas das cidades
         const soma = temperaturas.reduce((total, temperatura) => total + temperatura, 0);
         const media = soma / temperaturas.length;
         console.log("3 - Média das temperaturas:");
         console.log(media.toFixed(2) + "°C");
-        // 4 -temperaturas acima de 26°C
+        //temperaturas acima de 26°C
         const temperaturasAltas = dadosCidades.filter(cidade => cidade.main.temp > 26);
         console.log("4 - Temperaturas acima de 26°C:");
         console.log(temperaturasAltas);
